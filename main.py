@@ -10,7 +10,7 @@ def home():
 
         url = ai.imagecreate(ask)
 
-        return render_template("index.html", image=url)
+        return render_template("index.html", image_url=url)
 
     return render_template("index.html")
 

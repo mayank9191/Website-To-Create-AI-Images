@@ -1,27 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}AI Image Generator{% endblock %}</title>
     <style>
-      img
+      :root {
+        --primary-color: #007bff;
+        --secondary-color: #28a745;
+        --background-light: #f9f9f9;
+        --white: #ffffff;
+        --shadow-subtle: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+      }
+
+      body {
+        font-family: "Inter", "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .container {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 600px;
+        max-height: 700px;
+        overflow: hidden; /* Ensures content stays within container */
+      }
+
+      .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .input-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 350px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        outline: none;
+        background-color: #f8f9fa;
+      }
+
+      input[type="text"]:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .btn {
+        padding: 15px 25px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--white);
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: var(--shadow-subtle);
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .image-container {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.9);
+        transition: all 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .image-container.show {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+      }
+
+      .generated-image {
+        max-width: 100%;
+        max-height: 470px; /* Reduced height to ensure button fits */
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        object-fit: contain;
+      }
+
+      .download-btn {
+        background-color: var(--secondary-color);
+        text-decoration: none;
+        display: inline-block;
+        width: auto; /* Ensure button width is content-based */
+        max-width: 90%; /* Prevent button from extending beyond container */
+      }
+
+      .download-btn:hover {
+        background-color: #218838;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+          margin: 0 15px;
+        }
+
+        .form-container {
+          flex-direction: column;
+        }
+
+        .btn,
+        input[type="text"] {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
-    <form action="{{url_for('home')}}" method="POST">
-      <input
-        type="text"
-        name="description"
-        placeholder="Enter description here"
-      />
-      <button type="submit">Submit</button>
-    </form>
-    <div>
-      <img src="{{image}}" height="500px" />
+    <div class="container">
+      <form action="{{ url_for('home') }}" method="POST" class="form-container">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            name="description"
+            placeholder="Describe your image (e.g., 'Sunset over mountains')"
+            required
+          />
+        </div>
+        <button type="submit" class="btn">Generate Image</button>
+      </form>
+
+      {% if image_url %}
+      <div id="image-container" class="image-container show">
+        <img
+          src="{{ image_url }}"
+          alt="AI Generated Image"
+          class="generated-image"
+        />
+        <a
+          href="{{ image_url }}"
+          class="btn download-btn"
+          download="ai_generated_image.jpg"
+        >
+          Download Image
+        </a>
+      </div>
+      {% endif %}
     </div>
   </body>
 </html>
