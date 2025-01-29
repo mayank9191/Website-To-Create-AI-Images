@@ -13,7 +13,7 @@ def home():
         return render_template("index.html", image_url=url)
 
     return render_template("index.html")
-
+print("hello")
 
 if __name__ == "__main__":
     app.run(debug=True)
